@@ -6,11 +6,13 @@ const http = require('http');
 const server = http.createServer(app);
 const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const filePath = path.join(directory, 'status.txt');
+const pingPath = path.join(directory, 'pingpong.txt');
 
 app.get('/', (_req, res) => {
     try {
         const status = fs.readFileSync(filePath, 'utf-8');
-        res.send(status);
+        const pings = fs.readFileSync(pingPath, 'utf-8');
+        res.send(`${status}. <br/> Ping / Pongs: ${pings}`);
     } catch (err) {
         res.send(err);
     }
