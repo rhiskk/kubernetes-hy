@@ -11,7 +11,9 @@ const pingPath = path.join(directory, 'pingpong.txt');
 app.get('/', async (_req, res) => {
     try {
         const status = fs.readFileSync(filePath, 'utf-8');
-        const pings = fs.existsSync(pingPath) ? fs.readFileSync(pingPath, 'utf-8') : 0;
+        const pings = fs.existsSync(pingPath)
+            ? fs.readFileSync(pingPath, 'utf-8')
+            : 0;
         res.send(`${status}. <br/> Ping / Pongs: ${pings}`);
     } catch (err) {
         res.send(err);
