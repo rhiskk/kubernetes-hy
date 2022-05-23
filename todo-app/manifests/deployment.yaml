@@ -18,7 +18,7 @@ spec:
             claimName: todo-claim
       containers:
         - name: todo-app
-          image: ruuskhis/todo-app:latest
+          image: ruuskhis/todo-app:0.7
           volumeMounts:
           - name: todo
             mountPath: /usr/src/app/files
