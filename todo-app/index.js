@@ -41,9 +41,7 @@ const removeImage = async () => new Promise(res => fs.unlink(imagePath, (err) =>
 
 app.use('/files', express.static(path.join(__dirname, 'files')));
 app.get('*', async (_req, res) => {
-    if (await newDay()) {
-        await removeImage().then(findAFile());
-    };
+    if (await newDay()) await removeImage();
     await findAFile();
     res.sendFile(path.resolve('static', 'index.html'));
 });
