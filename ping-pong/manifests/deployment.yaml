@@ -13,12 +13,15 @@ spec:
         app: ping-pong
     spec:
       volumes:
-        - name: shared-logs
-          persistentVolumeClaim:
-            claimName: log-claim
+        # - name: shared-logs
+        #   persistentVolumeClaim:
+        #     claimName: log-claim
+        - name: pings
+          emptyDir: {}
       containers:
         - name: ping-pong
           image: ruuskhis/ping-pong:latest
+          imagePullPolicy: Always
           volumeMounts:
-          - name: shared-logs
+          - name: pings
             mountPath: /usr/src/app/files

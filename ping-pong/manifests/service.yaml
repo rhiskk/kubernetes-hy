@@ -7,6 +7,6 @@ spec:
   selector:
     app: ping-pong # This is the app as declared in the deployment.
   ports:
-    - port: 3000
+    - port: 2346
       protocol: TCP
       targetPort: 3000

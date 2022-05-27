@@ -19,7 +19,7 @@ app.get('/pingpong', async (_req, res) => {
     try {
         const visits = await getVisits();
         console.log(visits);
-        res.send(`pong ${visits}`);
+        res.json(visits);
     } catch (err) {
         res.send(err);
     }
