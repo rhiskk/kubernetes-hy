@@ -17,6 +17,9 @@ spec:
         - name: shared-logs
           persistentVolumeClaim:
             claimName: log-claim
+        - name: dotenv-config-map
+          configMap:
+            name: log-dotenv
       containers:
         - name: log-output-writer
           image: ruuskhis/log-output-writer:latest
@@ -32,3 +35,5 @@ spec:
           volumeMounts:
           - name: shared-logs
             mountPath: /usr/src/app/files
+          - name: dotenv-config-map
+            mountPath: /usr/src/app/config
