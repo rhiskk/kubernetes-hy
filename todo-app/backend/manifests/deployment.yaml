@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-app-dep
+  name: todo-backend-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo-app
+      app: todo-backend
   template:
     metadata:
       labels:
-        app: todo-app
+        app: todo-backend
     spec:
       volumes:
         - name: todo
           persistentVolumeClaim:
             claimName: todo-claim
       containers:
-        - name: todo-app
-          image: ruuskhis/todo-app:0.7
+        - name: todo-backend
+          image: ruuskhis/todo-backend:1.0
+          imagePullPolicy: Always
           volumeMounts:
           - name: todo
             mountPath: /usr/src/app/files

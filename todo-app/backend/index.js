@@ -1,5 +1,6 @@
 const { PORT } = require('./util/config');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const http = require('http');
 const axios = require('axios');
@@ -9,6 +10,26 @@ const server = http.createServer(app);
 const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const imagePath = path.join(directory, 'image.jpg');
 const datePath = path.join(directory, 'date.txt');
+const { v1: uuid } = require('uuid');
+app.use(express.json());
+app.use(cors());
+let todos = [
+    {
+        id: 1,
+        text: "TODO 1",
+        important: true
+    },
+    {
+        id: 2,
+        text: "TODO 2",
+        important: false
+    },
+    {
+        id: 3,
+        text: "TODO 3",
+        important: true
+    },
+];
 
 const previousDate = async () => {
     const previous = fs.existsSync(datePath)
@@ -26,11 +47,12 @@ const newDay = async () => {
     return false;
 };
 
-const findAFile = async () => {
+const findAnImage = async () => {
     if (fs.existsSync(imagePath)) return;
     await new Promise(res => fs.mkdir(directory, (_err) => res()));
-    const response = await axios.get('https://picsum.photos/200', { responseType: 'stream' });
-    response.data.pipe(fs.createWriteStream(imagePath));
+    const response = await axios.get('https://picsum.photos/200', { responseType: 'arraybuffer' });
+    const image = Buffer.from(response.data, 'binary');
+    fs.writeFileSync(imagePath, image);
 };
 
 const removeImage = async () => new Promise(res => fs.unlink(imagePath, (err) => {
@@ -40,10 +62,32 @@ const removeImage = async () => new Promise(res => fs.unlink(imagePath, (err) =>
 }));
 
 app.use('/files', express.static(path.join(__dirname, 'files')));
-app.get('*', async (_req, res) => {
+
+app.get('/api/image', async (_req, res) => {
     if (await newDay()) await removeImage();
-    await findAFile();
-    res.sendFile(path.resolve('static', 'index.html'));
+    await findAnImage();
+    res.sendFile(path.resolve('files', 'image.jpg'));
+});
+
+app.get('/api/todos', (_req, res) => {
+    res.json(todos);
+});
+
+app.post('/api/todos', (req, res) => {
+    const body = req.body;
+    if (!body.text) {
+        return res.status(400).json({
+            error: 'text missing'
+        });
+    }
+    const todo = {
+        text: body.text,
+        done: body.important || false,
+        id: uuid()
+    };
+    todos = todos.concat(todo);
+    console.log(todo);
+    res.json(todo);
 });
 
 server.listen(PORT, () => {
