@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: exercises
   name: example-pv
 spec:
   storageClassName: manual
