@@ -13,16 +13,13 @@ spec:
       labels:
         app: ping-pong
     spec:
-      volumes:
-        # - name: shared-logs
-        #   persistentVolumeClaim:
-        #     claimName: log-claim
-        - name: pings
-          emptyDir: {}
       containers:
         - name: ping-pong
           image: ruuskhis/ping-pong:latest
           imagePullPolicy: Always
-          volumeMounts:
-          - name: pings
-            mountPath: /usr/src/app/files
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-password
+                  key: POSTGRES_PASSWORD

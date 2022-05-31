@@ -2,16 +2,40 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const fs = require('fs');
-const path = require('path');
-const directory = path.join('/', 'usr', 'src', 'app', 'files');
-const filePath = path.join(directory, 'pingpong.txt');
+
+const { Sequelize, Model, DataTypes } = require('sequelize');
+
+const sequelize = new Sequelize("pingpong-db", "postgres",
+    process.env.POSTGRES_PASSWORD, {
+    host: "postgres-svc",
+    dialect: "postgres"
+});
+
+class Ping extends Model { }
+Ping.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    visits: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    sequelize,
+    timestamps: false,
+    modelName: 'ping'
+});
+
+Ping.sync();
 
 const getVisits = async () => {
-    const visits = fs.existsSync(filePath)
-        ? parseInt(fs.readFileSync(filePath, 'utf-8')) + 1
-        : 1;
-    fs.writeFileSync(filePath, visits.toString());
+    const [ping, _created] = await Ping.findOrCreate({
+        where: { id: 1 },
+        defaults: { visits: 0 }
+    });
+    const visits = await ping.increment('visits').then(p => p.visits);
     return visits;
 };
 

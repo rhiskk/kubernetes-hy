@@ -3,3 +3,5 @@ build
 files
 image.jpg
 date.txt
+secret.yaml
+key.txt
