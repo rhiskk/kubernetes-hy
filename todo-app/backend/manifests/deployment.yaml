@@ -19,8 +19,13 @@ spec:
             claimName: todo-claim
       containers:
         - name: todo-backend
-          image: ruuskhis/todo-backend:1.0
+          image: ruuskhis/todo-backend:1.2
           imagePullPolicy: Always
           volumeMounts:
-          - name: todo
-            mountPath: /usr/src/app/files
+            - name: todo
+              mountPath: /usr/src/app/files
+          envFrom:
+            - secretRef:
+                name: pg-password
+            - configMapRef:
+                name: pg-configmap

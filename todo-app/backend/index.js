@@ -1,4 +1,4 @@
-const { PORT } = require('./util/config');
+const { PORT, PG_PASSWORD, PG_USER, PG_DB, DB_HOST } = require('./util/config');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -10,26 +10,53 @@ const server = http.createServer(app);
 const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const imagePath = path.join(directory, 'image.jpg');
 const datePath = path.join(directory, 'date.txt');
-const { v1: uuid } = require('uuid');
+const { Sequelize, Model, DataTypes } = require('sequelize');
+
 app.use(express.json());
 app.use(cors());
-let todos = [
-    {
-        id: 1,
-        text: "TODO 1",
-        important: true
+
+const errorHandler = (err, _req, res, next) => {
+    logger.error(err.message);
+    if (err.name === "SequelizeDatabaseError") {
+        return res.status(400).json({ error: err.message });
+    } else if (err.name === "SequelizeValidationError") {
+        return res.status(400).json({ error: err.message });
+    }
+    next(err);
+};
+app.use(errorHandler);
+
+const sequelize = new Sequelize(PG_DB, PG_USER, PG_PASSWORD, {
+    host: DB_HOST,
+    dialect: "postgres"
+});
+
+class Todo extends Model { }
+Todo.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    {
-        id: 2,
-        text: "TODO 2",
-        important: false
+    text: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            max: 140
+        }
     },
-    {
-        id: 3,
-        text: "TODO 3",
-        important: true
-    },
-];
+    done: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
+}, {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    modelName: 'todo'
+});
+
+Todo.sync();
 
 const previousDate = async () => {
     const previous = fs.existsSync(datePath)
@@ -69,25 +96,26 @@ app.get('/api/image', async (_req, res) => {
     res.sendFile(path.resolve('files', 'image.jpg'));
 });
 
-app.get('/api/todos', (_req, res) => {
-    res.json(todos);
+app.get('/api/todos', async (_req, res, next) => {
+    try {
+        const todos = await Todo.findAll({});
+        res.json(todos);
+    } catch (err) {
+        next(err);
+    }
 });
 
-app.post('/api/todos', (req, res) => {
+app.post('/api/todos', async (req, res, next) => {
     const body = req.body;
-    if (!body.text) {
-        return res.status(400).json({
-            error: 'text missing'
+    try {
+        const todo = await Todo.create({
+            text: body.text,
+            done: body.important || false,
         });
+        res.status(201).json(todo);
+    } catch (err) {
+        next(error);
     }
-    const todo = {
-        text: body.text,
-        done: body.important || false,
-        id: uuid()
-    };
-    todos = todos.concat(todo);
-    console.log(todo);
-    res.json(todo);
 });
 
 server.listen(PORT, () => {
