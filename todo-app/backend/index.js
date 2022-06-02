@@ -16,24 +16,16 @@ app.use(express.json());
 app.use(cors());
 
 const errorHandler = (err, _req, res, next) => {
+    console.log(err);
     if (err.name === "SequelizeDatabaseError") {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
     } else if (err.name === "SequelizeValidationError") {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
     }
     next(err);
 };
 
-const requestLogger = (req, _res, next) => {
-    console.log("Method:", req.method);
-    console.log("Path:  ", req.path);
-    console.log("Body:  ", req.body);
-    console.log("---");
-    next();
-};
-
+app.use(errorHandler);
 
 const sequelize = new Sequelize(PG_DB, PG_USER, PG_PASSWORD, {
     host: DB_HOST,
@@ -51,10 +43,7 @@ Todo.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            len: {
-                args: [2, 140],
-                msg: "Todo length must be between 2 and 140 characters."
-            }
+            max: 140
         }
     },
     done: {
@@ -101,7 +90,7 @@ const removeImage = async () => new Promise(res => fs.unlink(imagePath, (err) =>
 }));
 
 app.use('/files', express.static(path.join(__dirname, 'files')));
-app.use(requestLogger);
+
 app.get('/api/image', async (_req, res) => {
     if (await newDay()) await removeImage();
     await findAnImage();
@@ -122,15 +111,13 @@ app.post('/api/todos', async (req, res, next) => {
     try {
         const todo = await Todo.create({
             text: body.text,
-            done: body.done || false,
+            done: body.important || false,
         });
         res.status(201).json(todo);
     } catch (err) {
-        next(err);
+        next(error);
     }
 });
-
-app.use(errorHandler);
 
 server.listen(PORT, () => {
     console.log(`Server started in port ${PORT}`);

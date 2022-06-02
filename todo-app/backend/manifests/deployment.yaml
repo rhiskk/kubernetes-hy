@@ -19,7 +19,7 @@ spec:
             claimName: todo-claim
       containers:
         - name: todo-backend
-          image: ruuskhis/todo-backend:1.3
+          image: ruuskhis/todo-backend:1.2
           imagePullPolicy: Always
           volumeMounts:
             - name: todo
