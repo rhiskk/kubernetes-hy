@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: project
+  name: daily
+spec:
+  schedule: '0 0 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: daily
+            image: ruuskhis/todo-daily:1.0
+            env:
+              - name: URL
+                value: "http://todo-backend-svc:2346/api/todos"
+          restartPolicy: OnFailure

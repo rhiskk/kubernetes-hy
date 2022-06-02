@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 const errorHandler = (err, _req, res, next) => {
-    logger.error(err.message);
+    console.log(err);
     if (err.name === "SequelizeDatabaseError") {
         return res.status(400).json({ error: err.message });
     } else if (err.name === "SequelizeValidationError") {
@@ -24,6 +24,7 @@ const errorHandler = (err, _req, res, next) => {
     }
     next(err);
 };
+
 app.use(errorHandler);
 
 const sequelize = new Sequelize(PG_DB, PG_USER, PG_PASSWORD, {
