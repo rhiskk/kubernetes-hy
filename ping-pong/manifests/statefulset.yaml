@@ -48,13 +48,13 @@ spec:
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
   volumeClaimTemplates:
     - metadata:
         namespace: exercises
         name: pgdata
       spec:
         accessModes: ['ReadWriteOnce']
-        storageClassName: local-path
         resources:
           requests:
             storage: 100Mi
