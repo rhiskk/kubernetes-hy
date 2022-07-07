@@ -8,7 +8,7 @@ const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const filePath = path.join(directory, 'status.txt');
 const axios = require('axios');
 const PINGPONG_URL = process.env.PINGPONG_URL || 'http://ping-pong-svc:2346/pingpong';
-require('dotenv').config( { path: path.join(directory, '../config/.env') });
+require('dotenv').config({ path: path.join(directory, '../config/.env') });
 
 const getPings = async () => {
     try {

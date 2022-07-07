@@ -49,6 +49,10 @@ app.get('/pingpong', async (_req, res) => {
     }
 });
 
+app.get('/', (_req, res) => {
+    res.send(200);
+});
+
 server.listen(3000, () => {
     console.log(`Server started in port 3000`);
 });
