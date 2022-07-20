@@ -1,4 +1,4 @@
-name: Dlete environment
+name: Delete environment
 
 on:
   delete:
@@ -8,7 +8,7 @@ env:
   GKE_ZONE: europe-north1-a
 
 jobs:
-  delete environment:
+  delete-environment:
     name: Delete environment
     runs-on: ubuntu-latest
 
