@@ -1,0 +1,33 @@
+name: Dlete environment
+
+on:
+  delete:
+
+env:
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-a
+
+jobs:
+  delete environment:
+    name: Delete environment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@main
+        with:
+          project_id: ${{ secrets.GKE_PROJECT }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
+
+      # Get the GKE credentials so we can delete the environment
+      - run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+
+      # Delete the namespace from the GKE cluster
+      - name: Delete namespace
+        run: |-
+          kubectl delete namespace ${GITHUB_REF#refs/heads/}
