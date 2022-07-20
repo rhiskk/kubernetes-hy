@@ -79,12 +79,13 @@ jobs:
         uses: imranismail/setup-kustomize@v1
 
       # Deploy the Docker image to the GKE cluster
+      # Branch name must must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character
       - name: Deploy
         run: |-
           cd ./todo-app/
-          kubectl create namespace n-${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=n-${GITHUB_REF#refs/heads/}
-          kustomize edit set namespace n-${GITHUB_REF#refs/heads/}
+          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
           kustomize edit set image TODO_BACKEND_IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image TODO_DAILY_IMAGE=gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image TODO_FRONTEND_IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
