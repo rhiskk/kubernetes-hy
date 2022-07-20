@@ -82,9 +82,9 @@ jobs:
       - name: Deploy
         run: |-
           cd ./todo-app/
-          kustomize edit set image gcr.io/PROJECT_ID/TODO_BACKEND_IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-          kustomize edit set image gcr.io/PROJECT_ID/TODO_DAILY_IMAGE=gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-          kustomize edit set image gcr.io/PROJECT_ID/TODO_FRONTEND_IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image TODO_BACKEND_IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image TODO_DAILY_IMAGE=gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize edit set image TODO_FRONTEND_IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $IMAGE -n project
           kubectl get services -o wide
