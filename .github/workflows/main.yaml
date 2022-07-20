@@ -64,11 +64,17 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v1
 
+      - name: Decrypt secret
+        run: |-
+          cd ./backend/manifests/
+          export SOPS_AGE_KEY_FILE={{ secrets.SOPS_AGE_KEY }}
+          sops --decrypt secret.enc.yaml > secret.yaml
+
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
           cd ./todo-app/
           kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $IMAGE
+          kubectl rollout status deployment $IMAGE -n project
           kubectl get services -o wide
