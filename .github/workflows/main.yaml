@@ -12,7 +12,9 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-a
-  IMAGE: dwk-environments
+  BACKEN_IMAGE: todo-backend
+  DAILY_IMAGE: todo-daily
+  FRONTEND_IMAGE: todo-frontend
 
 jobs:
   setup-build-publish-deploy:
@@ -40,13 +42,23 @@ jobs:
       # Build the Docker image
       - name: Build
         run: |-
+          cd ./todo-app/
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-            .
+            --tag "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./backend
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./daily
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./frontend
+
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |-
-          docker push "gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
 
       # Set up kustomize
       - name: Set up Kustomize
