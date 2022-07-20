@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - backend/manifests/deployment.yaml
+  - backend/manifests/service.yaml
+  - backend/manifests/ingress.yaml
+  - backend/manifests/configmap.yaml
+  - backend/manifests/secret.yaml
+  - backend/manifests/statefulset.yaml
+  - backend/manifests/persistentvolumeclaim.yaml
+  - frontend/manifests/deployment.yaml
+  - frontend/manifests/service.yaml
+  - daily/manifests/cronjob.yaml
+images:
+  - name: TODO_FRONTEND_IMAGE
+    newName: ruuskhis/todo-frontend:1.4
+  - name: TODO_BACKEND_IMAGE
+    newName: ruuskhis/todo-backend:1.4
+  - name: TODO_DAILY_IMAGE
+    newName: ruuskhis/todo-daily:1.4

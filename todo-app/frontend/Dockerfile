@@ -2,7 +2,7 @@ FROM node:alpine AS build-stage
 
 WORKDIR /usr/src/app
 COPY . .
-ENV BACKEND_URL='http://localhost:8080/api'
+ENV BACKEND_URL='/api'
 RUN npm ci
 RUN npm run build
 

@@ -130,6 +130,10 @@ app.post('/api/todos', async (req, res, next) => {
     }
 });
 
+app.get('/', (_req, res) => {
+    res.send('OK');
+});
+
 app.use(errorHandler);
 
 server.listen(PORT, () => {

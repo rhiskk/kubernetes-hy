@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: todo-frontend
-          image: ruuskhis/todo-frontend:1.0
+          image: TODO_FRONTEND_IMAGE
           imagePullPolicy: Always
-          env: 
-          - name: BACKEND_URL
-            value: "http://localhost:8081/api"
+          env:
+            - name: BACKEND_URL
+              value: '/api'

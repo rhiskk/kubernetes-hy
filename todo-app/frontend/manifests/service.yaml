@@ -4,9 +4,9 @@ metadata:
   namespace: project
   name: todo-frontend-svc
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
-    app: todo-frontend # This is the app as declared in the deployment.
+    app: todo-frontend
   ports:
     - port: 2345
       protocol: TCP
