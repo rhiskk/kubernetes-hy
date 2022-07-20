@@ -2,8 +2,6 @@ name: Release application
 
 on:
   push:
-    branches:
-      - main
     paths:
       - 'todo-app/**'
       - '.github/workflows/main.yaml'
@@ -84,8 +82,9 @@ jobs:
       - name: Deploy
         run: |-
           cd ./todo-app/
-          kubectl config set-context --current --namespace=project
-          kustomize edit set namespace project
+          kubectl create namespace n-${GITHUB_REF#refs/heads/} || true
+          kubectl config set-context --current --namespace=n-${GITHUB_REF#refs/heads/}
+          kustomize edit set namespace n-${GITHUB_REF#refs/heads/}
           kustomize edit set image TODO_BACKEND_IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image TODO_DAILY_IMAGE=gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image TODO_FRONTEND_IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
