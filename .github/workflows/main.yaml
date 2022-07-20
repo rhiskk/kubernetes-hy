@@ -25,6 +25,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Sops Binary Installer
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: 'latest'
+        id: install
+
       - name: Decrypt secret
         run: |-
           cd ./todo-app/backend/manifests/
