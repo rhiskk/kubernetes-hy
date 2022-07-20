@@ -15,6 +15,8 @@ env:
   BACKEND_IMAGE: todo-backend
   DAILY_IMAGE: todo-daily
   FRONTEND_IMAGE: todo-frontend
+  BACKEND_DEP: todo-backend-dep
+  FRONTEND_DEP: todo-frontend-dep
   SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
 
 jobs:
@@ -88,6 +90,6 @@ jobs:
           kustomize edit set image TODO_DAILY_IMAGE=gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize edit set image TODO_FRONTEND_IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $DAILY_IMAGE
-          kubectl rollout status deployment $FRONTEND_IMAGE
+          kubectl rollout status deployment/$BACKEND_DEP
+          kubectl rollout status deployment/$FRONTEND_DEP
           kubectl get services -o wide
