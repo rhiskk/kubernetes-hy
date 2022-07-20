@@ -15,6 +15,7 @@ env:
   BACKEND_IMAGE: todo-backend
   DAILY_IMAGE: todo-daily
   FRONTEND_IMAGE: todo-frontend
+  SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
 
 jobs:
   setup-build-publish-deploy:
@@ -34,7 +35,7 @@ jobs:
       - name: Decrypt secret
         run: |-
           cd ./todo-app/backend/manifests/
-          echo {{ secrets.SOPS_AGE_KEY }} > key.txt
+          echo $SOPS_AGE_KEY > key.txt
           export SOPS_AGE_KEY_FILE=$(pwd)/key.txt
           sops --decrypt secret.enc.yaml > secret.yaml
 
