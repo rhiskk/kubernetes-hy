@@ -39,50 +39,50 @@ jobs:
           export SOPS_AGE_KEY_FILE=$(pwd)/key.txt
           sops --decrypt secret.enc.yaml > secret.yaml
 
-      # - name: Set up Cloud SDK
-      #   uses: google-github-actions/setup-gcloud@main
-      #   with:
-      #     project_id: ${{ secrets.GKE_PROJECT }}
-      #     service_account_key: ${{ secrets.GKE_SA_KEY }}
-      #     export_default_credentials: true
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@main
+        with:
+          project_id: ${{ secrets.GKE_PROJECT }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
 
-      # # Configure Docker to use the gcloud command-line tool as a credential
-      # # helper for authentication
-      # - run: |-
-      #     gcloud --quiet auth configure-docker
-      # # Get the GKE credentials so we can deploy to the cluster
-      # - run: |-
-      #     gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-      # # Build the Docker image
-      # - name: Build
-      #   run: |-
-      #     cd ./todo-app/
-      #     docker build \
-      #       --tag "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-      #       ./backend
-      #     docker build \
-      #       --tag "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-      #       ./daily
-      #     docker build \
-      #       --tag "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-      #       ./frontend
+      # Configure Docker to use the gcloud command-line tool as a credential
+      # helper for authentication
+      - run: |-
+          gcloud --quiet auth configure-docker
+      # Get the GKE credentials so we can deploy to the cluster
+      - run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      # Build the Docker image
+      - name: Build
+        run: |-
+          cd ./todo-app/
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./backend
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./daily
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+            ./frontend
 
-      # # Push the Docker image to Google Container Registry
-      # - name: Publish
-      #   run: |-
-      #     docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-      #     docker push "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-      #     docker push "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$DAILY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
 
-      # # Set up kustomize
-      # - name: Set up Kustomize
-      #   uses: imranismail/setup-kustomize@v1
+      # Set up kustomize
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v1
 
-      # # Deploy the Docker image to the GKE cluster
-      # - name: Deploy
-      #   run: |-
-      #     cd ./todo-app/
-      #     kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-      #     kustomize build . | kubectl apply -f -
-      #     kubectl rollout status deployment $IMAGE -n project
-      #     kubectl get services -o wide
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |-
+          cd ./todo-app/
+          kustomize edit set image gcr.io/PROJECT_ID/IMAGE=gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+          kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment $IMAGE -n project
+          kubectl get services -o wide
