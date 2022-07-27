@@ -19,6 +19,7 @@ const App = () => {
   };
 
   const handleTodoChange = (event) => {
+    event.preventDefault();
     setNewTodo(event.target.value);
   };
 
