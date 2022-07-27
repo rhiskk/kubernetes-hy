@@ -13,7 +13,8 @@
 
 - Need to rely on a third party service
 - Might become very expensive as the project scales and swtching to a different solution might be a pain at that point
-  &nbsp;
+
+<br/>
 
 ## DIY:
 
@@ -26,3 +27,10 @@
 
 - More complex to initialize and maintain
 - In smaller projects with less data, initializing and maintaining costs can be higher than DBaaS costs
+- Backups are harder to set up and use
+
+<br/>
+
+# Exercise 3.07: Commitment
+
+I will use PersistentVolumeClaims in this project, since I am already using them and don't really have time to look into Google Cloud SQL at this point.
