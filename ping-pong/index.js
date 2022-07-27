@@ -50,7 +50,17 @@ app.get('/pingpong', async (_req, res) => {
 });
 
 app.get('/', (_req, res) => {
-    res.send(200);
+    res.sendStatus(200);
+});
+
+app.get('/healthz', async (_req, res) => {
+    try {
+        await sequelize.authenticate();
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });
 
 server.listen(3000, () => {

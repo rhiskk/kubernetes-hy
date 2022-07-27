@@ -31,12 +31,18 @@ spec:
           imagePullPolicy: Always
           env:
             - name: PINGPONG_URL
-              value: 'http://ping-pong-svc:2346/pingpong'
+              value: 'http://ping-pong-svc:2346'
           volumeMounts:
             - name: shared-logs
               mountPath: /usr/src/app/files
             - name: dotenv-config-map
               mountPath: /usr/src/app/config
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 3000
           resources:
             limits:
               cpu: '80m'
