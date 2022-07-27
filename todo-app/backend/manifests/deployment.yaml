@@ -32,4 +32,4 @@ spec:
           resources:
             limits:
               cpu: '80m'
-              memory: '80Mi'
+              memory: '150Mi'
