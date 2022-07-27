@@ -131,7 +131,21 @@ app.post('/api/todos', async (req, res, next) => {
 });
 
 app.get('/', (_req, res) => {
-    res.send('OK');
+    res.sendStatus(200);
+});
+
+app.get('/api', (_req, res) => {
+    res.sendStatus(200);
+});
+
+app.get('/healthz', async (_req, res) => {
+    try {
+        await sequelize.authenticate();
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });
 
 app.use(errorHandler);
