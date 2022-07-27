@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BACKEND_URL } from "./util/config";
 import todoService from './services/todos';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 const App = () => {
   const imageUrl = `${BACKEND_URL}/image`;
@@ -57,12 +57,14 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/healthz" element={<Health />} />
-        <Route path="/" element={<Todo />} />
-      </Routes>
-    </Router>
+    <Switch>
+      <Route path="/healthz" >
+        <Health />
+      </Route>
+      <Route path="/">
+        <Todo />
+      </Route>
+    </Switch>
   );
 };
 
