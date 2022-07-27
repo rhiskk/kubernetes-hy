@@ -20,6 +20,18 @@ spec:
           env:
             - name: BACKEND_URL
               value: '/api'
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 80
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 80
           resources:
             limits:
               cpu: '80m'
