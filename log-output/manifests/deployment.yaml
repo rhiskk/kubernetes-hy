@@ -37,3 +37,7 @@ spec:
               mountPath: /usr/src/app/files
             - name: dotenv-config-map
               mountPath: /usr/src/app/config
+          resources:
+            limits:
+              cpu: '80m'
+              memory: '150Mi'

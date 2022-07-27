@@ -23,3 +23,7 @@ spec:
                 secretKeyRef:
                   name: pg-password
                   key: POSTGRES_PASSWORD
+          resources:
+            limits:
+              cpu: '80m'
+              memory: '100Mi'
