@@ -20,3 +20,7 @@ spec:
           env:
             - name: BACKEND_URL
               value: '/api'
+          resources:
+            limits:
+              cpu: '80m'
+              memory: '80Mi'
