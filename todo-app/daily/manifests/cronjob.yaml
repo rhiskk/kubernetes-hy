@@ -14,9 +14,9 @@ spec:
               image: ruuskhis/todo-daily:1.0
               env:
                 - name: URL
-                  value: 'http://todo-backend-svc:2346/api/todos'
-          restartPolicy: OnFailure
-          resources:
-            limits:
-              cpu: '30m'
-              memory: '30Mi'
+                  value: 'http://todo-backend-svc:2346/api/todos'      
+              resources:
+                limits:
+                  cpu: '30m'
+                  memory: '30Mi'
+            restartPolicy: OnFailure
