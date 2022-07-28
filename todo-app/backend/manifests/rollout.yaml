@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  namespace: project
+  name: todo-backend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - analysis:
+            templates:
+              - templateName: cpu-usage-rate
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      volumes:
+        - name: todo
+          persistentVolumeClaim:
+            claimName: todo-claim
+      containers:
+        - name: todo-backend
+          image: TODO_BACKEND_IMAGE
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: todo
+              mountPath: /usr/src/app/files
+          envFrom:
+            - secretRef:
+                name: pg-password
+            - configMapRef:
+                name: pg-configmap
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+              path: /healthz
+              port: 3001
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+              path: /healthz
+              port: 3001
+          resources:
+            limits:
+              cpu: '80m'
+              memory: '150Mi'

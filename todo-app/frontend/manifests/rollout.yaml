@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  namespace: project
+  name: todo-frontend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-frontend
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - analysis:
+            templates:
+              - templateName: cpu-usage-rate
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+    spec:
+      containers:
+        - name: todo-frontend
+          image: TODO_FRONTEND_IMAGE
+          imagePullPolicy: Always
+          env:
+            - name: BACKEND_URL
+              value: '/api'
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+              path: /healthz
+              port: 80
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+              path: /healthz
+              port: 80
+          resources:
+            limits:
+              cpu: '80m'
+              memory: '80Mi'

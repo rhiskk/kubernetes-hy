@@ -4,7 +4,7 @@ metadata:
   namespace: project
   name: todo-backend-svc
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: todo-backend
   ports:
