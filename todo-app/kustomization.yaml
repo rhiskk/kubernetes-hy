@@ -17,8 +17,8 @@ resources:
   - daily/manifests/cronjob.yaml
 images:
   - name: TODO_FRONTEND_IMAGE
-    newName: ruuskhis/todo-frontend:1.8
+    newName: ruuskhis/todo-frontend:1.9
   - name: TODO_BACKEND_IMAGE
-    newName: ruuskhis/todo-backend:1.8
+    newName: ruuskhis/todo-backend:1.9
   - name: TODO_DAILY_IMAGE
     newName: ruuskhis/todo-daily:1.4

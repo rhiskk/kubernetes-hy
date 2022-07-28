@@ -130,6 +130,17 @@ app.post('/api/todos', async (req, res, next) => {
     }
 });
 
+app.put('/api/todos/:id', async (req, res, next) => {
+    try {
+        const todo = await Todo.findByPk(req.params.id);
+        todo.done = !todo.done;
+        await todo.save();
+        res.status(200).json(todo);
+    } catch (err) {
+        next(err);
+    }
+});
+
 app.get('/', (_req, res) => {
     res.sendStatus(200);
 });

@@ -12,9 +12,15 @@ const create = async newTodo => {
     return res.data;
 };
 
+const update = async todo => {
+    const res = await axios.put(`${baseUrl}/${todo.id}`, todo);
+    return res.data;
+};
+
 const exports = {
     getAll,
-    create
+    create,
+    update
 };
 
 export default exports;

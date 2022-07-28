@@ -8,10 +8,16 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
+  const toggleDone = async (todo) => {
+    const updatedTodo = await todoService.update(todo);
+    setTodos(todos.map(t => t.id === updatedTodo.id ? updatedTodo : t));
+  };
+
   const addTodo = async (event) => {
     event.preventDefault();
     const todo = {
-      text: newTodo
+      text: newTodo,
+      done: false,
     };
     const created = await todoService.create(todo);
     setTodos(todos.concat(created));
@@ -40,9 +46,9 @@ const Todo = () => {
         <button type="submit">Create TODO</button>
       </form>
       <ul>
-        {todos.map(todo =>
-          <li key={todo.id}>
-            {todo.text} {todo.done}
+        {todos?.map(todo =>
+          <li key={todo.id} onClick={() => toggleDone(todo)}>
+            {todo.done ? todo.text : <s>{todo.text}</s>}
           </li>
         )}
       </ul>
