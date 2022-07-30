@@ -37,7 +37,7 @@ spec:
               containerPort: 5432
           envFrom:
             - secretRef:
-                name: pg-password
+                name: secrets
             - configMapRef:
                 name: pg-configmap
           volumeMounts:

@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  #- backend/manifests/deployment.yaml
+  # - backend/manifests/deployment.yaml
   - backend/manifests/analysistemplate.yaml
   - backend/manifests/rollout.yaml
   - backend/manifests/service.yaml
@@ -11,14 +11,17 @@ resources:
   - backend/manifests/statefulset.yaml
   - backend/manifests/persistentvolume.yaml
   - backend/manifests/persistentvolumeclaim.yaml
-  #- frontend/manifests/deployment.yaml
+  # - frontend/manifests/deployment.yaml
   - frontend/manifests/rollout.yaml
   - frontend/manifests/service.yaml
   - daily/manifests/cronjob.yaml
+  - broadcaster/manifests/deployment.yaml
 images:
   - name: TODO_FRONTEND_IMAGE
-    newName: ruuskhis/todo-frontend:1.9
+    newName: ruuskhis/todo-frontend:2.0
   - name: TODO_BACKEND_IMAGE
-    newName: ruuskhis/todo-backend:1.9
+    newName: ruuskhis/todo-backend:2.0
   - name: TODO_DAILY_IMAGE
     newName: ruuskhis/todo-daily:1.4
+  - name: TODO_BROADCASTER_IMAGE
+    newName: ruuskhis/todo-broadcaster:1.0

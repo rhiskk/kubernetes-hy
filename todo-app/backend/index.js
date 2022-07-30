@@ -11,9 +11,12 @@ const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const imagePath = path.join(directory, 'image.jpg');
 const datePath = path.join(directory, 'date.txt');
 const { Sequelize, Model, DataTypes } = require('sequelize');
-
+const NATS = require('nats');
 app.use(express.json());
 app.use(cors());
+
+let nc = null;
+const jc = NATS.JSONCodec();
 
 const errorHandler = (err, _req, res, next) => {
     if (err.name === "SequelizeDatabaseError") {
@@ -102,6 +105,7 @@ const removeImage = async () => new Promise(res => fs.unlink(imagePath, (err) =>
 
 app.use('/files', express.static(path.join(__dirname, 'files')));
 app.use(requestLogger);
+
 app.get('/api/image', async (_req, res) => {
     if (await newDay()) await removeImage();
     await findAnImage();
@@ -125,6 +129,8 @@ app.post('/api/todos', async (req, res, next) => {
             done: body.done || false,
         });
         res.status(201).json(todo);
+        const payload = { action: 'created', todo };
+        nc.publish('todo', jc.encode(payload));
     } catch (err) {
         next(err);
     }
@@ -136,6 +142,8 @@ app.put('/api/todos/:id', async (req, res, next) => {
         todo.done = !todo.done;
         await todo.save();
         res.status(200).json(todo);
+        const payload = { action: 'updated', todo };
+        nc.publish('todo', jc.encode(payload));
     } catch (err) {
         next(err);
     }
@@ -161,6 +169,20 @@ app.get('/healthz', async (_req, res) => {
 
 app.use(errorHandler);
 
-server.listen(PORT, () => {
-    console.log(`Server started in port ${PORT}`);
-});
+const start = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Connected to database');
+        nc = await NATS.connect({
+            servers: process.env.NATS_URL || 'nats://my-nats:4222'
+        });
+        console.log(`Connected to NATS at ${nc.getServer()}`);
+        server.listen(PORT, () => {
+            console.log(`Server started in port ${PORT}`);
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+start();

@@ -26,7 +26,7 @@ spec:
               mountPath: /usr/src/app/files
           envFrom:
             - secretRef:
-                name: pg-password
+                name: secrets
             - configMapRef:
                 name: pg-configmap
           readinessProbe:

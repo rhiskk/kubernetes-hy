@@ -31,9 +31,12 @@ spec:
           volumeMounts:
             - name: todo
               mountPath: /usr/src/app/files
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
           envFrom:
             - secretRef:
-                name: pg-password
+                name: secrets
             - configMapRef:
                 name: pg-configmap
           readinessProbe:
