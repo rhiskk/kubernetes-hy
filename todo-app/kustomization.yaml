@@ -9,7 +9,7 @@ resources:
   - backend/manifests/configmap.yaml
   - backend/manifests/secret.yaml
   - backend/manifests/statefulset.yaml
-  - backend/manifests/persistentvolume.yaml
+  # - backend/manifests/persistentvolume.yaml
   - backend/manifests/persistentvolumeclaim.yaml
   # - frontend/manifests/deployment.yaml
   - frontend/manifests/rollout.yaml
