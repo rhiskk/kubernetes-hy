@@ -1,27 +1,31 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
   # - backend/manifests/deployment.yaml
-  - backend/manifests/analysistemplate.yaml
-  - backend/manifests/rollout.yaml
-  - backend/manifests/service.yaml
-  - backend/manifests/ingress.yaml
-  - backend/manifests/configmap.yaml
-  - backend/manifests/secret.enc.yaml
-  - backend/manifests/statefulset.yaml
   # - backend/manifests/persistentvolume.yaml
-  - backend/manifests/persistentvolumeclaim.yaml
   # - frontend/manifests/deployment.yaml
-  - frontend/manifests/rollout.yaml
-  - frontend/manifests/service.yaml
-  - daily/manifests/cronjob.yaml
-  - broadcaster/manifests/deployment.yaml
+resources:
+- backend/manifests/analysistemplate.yaml
+- backend/manifests/rollout.yaml
+- backend/manifests/service.yaml
+- backend/manifests/ingress.yaml
+- backend/manifests/configmap.yaml
+- backend/manifests/secret.enc.yaml
+- backend/manifests/statefulset.yaml
+- backend/manifests/persistentvolumeclaim.yaml
+- frontend/manifests/rollout.yaml
+- frontend/manifests/service.yaml
+- daily/manifests/cronjob.yaml
+- broadcaster/manifests/deployment.yaml
 images:
-  - name: TODO_FRONTEND_IMAGE
-    newName: ruuskhis/todo-frontend:2.0
-  - name: TODO_BACKEND_IMAGE
-    newName: ruuskhis/todo-backend:2.0
-  - name: TODO_DAILY_IMAGE
-    newName: ruuskhis/todo-daily:1.4
-  - name: TODO_BROADCASTER_IMAGE
-    newName: ruuskhis/todo-broadcaster:1.0
+- name: TODO_BACKEND_IMAGE
+  newName: ruuskhis/todo-backend
+  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+- name: TODO_BROADCASTER_IMAGE
+  newName: ruuskhis/todo-broadcaster
+  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+- name: TODO_DAILY_IMAGE
+  newName: ruuskhis/todo-daily
+  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+- name: TODO_FRONTEND_IMAGE
+  newName: ruuskhis/todo-frontend
+  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
