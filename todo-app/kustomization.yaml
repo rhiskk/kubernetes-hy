@@ -19,13 +19,13 @@ resources:
 images:
 - name: TODO_BACKEND_IMAGE
   newName: ruuskhis/todo-backend
-  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+  newTag: de5ba7a5687f6c8a1bd03aa782fbd8bf1642d315
 - name: TODO_BROADCASTER_IMAGE
   newName: ruuskhis/todo-broadcaster
-  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+  newTag: de5ba7a5687f6c8a1bd03aa782fbd8bf1642d315
 - name: TODO_DAILY_IMAGE
   newName: ruuskhis/todo-daily
-  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+  newTag: de5ba7a5687f6c8a1bd03aa782fbd8bf1642d315
 - name: TODO_FRONTEND_IMAGE
   newName: ruuskhis/todo-frontend
-  newTag: bae28cbb568d39c376945ae88a4501d1d604a986
+  newTag: de5ba7a5687f6c8a1bd03aa782fbd8bf1642d315
