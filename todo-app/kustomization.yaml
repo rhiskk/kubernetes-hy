@@ -7,7 +7,7 @@ resources:
   - backend/manifests/service.yaml
   - backend/manifests/ingress.yaml
   - backend/manifests/configmap.yaml
-  - backend/manifests/secret.yaml
+  - backend/manifests/secret.enc.yaml
   - backend/manifests/statefulset.yaml
   # - backend/manifests/persistentvolume.yaml
   - backend/manifests/persistentvolumeclaim.yaml

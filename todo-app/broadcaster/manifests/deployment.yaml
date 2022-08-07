@@ -4,7 +4,7 @@ metadata:
   namespace: project
   name: todo-broadcaster-dep
 spec:
-  replicas: 6
+  replicas: 1
   selector:
     matchLabels:
       app: todo-broadcaster
