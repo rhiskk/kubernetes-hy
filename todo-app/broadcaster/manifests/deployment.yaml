@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: project
   name: todo-broadcaster-dep
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -10,16 +10,18 @@ spec:
       app: todo-broadcaster
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: todo-broadcaster
     spec:
       containers:
-        - name: todo-broadcaster
-          image: TODO_BROADCASTER_IMAGE
-          imagePullPolicy: Always
-          env:
+        - env:
             - name: NATS_URL
               value: nats://my-nats:4222
           envFrom:
             - secretRef:
                 name: secrets
+          image: TODO_BROADCASTER_IMAGE
+          imagePullPolicy: Always
+          name: todo-broadcaster

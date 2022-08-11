@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: project
   name: todo-backend-dep
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -10,38 +10,40 @@ spec:
       app: todo-backend
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: todo-backend
     spec:
-      volumes:
-        - name: todo
-          persistentVolumeClaim:
-            claimName: todo-claim
       containers:
-        - name: todo-backend
-          image: TODO_BACKEND_IMAGE
-          imagePullPolicy: Always
-          volumeMounts:
-            - name: todo
-              mountPath: /usr/src/app/files
-          envFrom:
+        - envFrom:
             - secretRef:
                 name: secrets
             - configMapRef:
                 name: pg-configmap
-          readinessProbe:
-            initialDelaySeconds: 10
-            periodSeconds: 5
+          image: TODO_BACKEND_IMAGE
+          imagePullPolicy: Always
+          livenessProbe:
             httpGet:
               path: /healthz
               port: 3001
-          livenessProbe:
             initialDelaySeconds: 20
             periodSeconds: 5
+          name: todo-backend
+          readinessProbe:
             httpGet:
               path: /healthz
               port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 5
           resources:
             limits:
-              cpu: '80m'
-              memory: '150Mi'
+              cpu: 80m
+              memory: 150Mi
+          volumeMounts:
+            - mountPath: /usr/src/app/files
+              name: todo
+      volumes:
+        - name: todo
+          persistentVolumeClaim:
+            claimName: todo-claim

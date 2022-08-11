@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: project
   name: todo-frontend-dep
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -10,29 +10,31 @@ spec:
       app: todo-frontend
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: todo-frontend
     spec:
       containers:
-        - name: todo-frontend
+        - env:
+            - name: BACKEND_URL
+              value: /api
           image: TODO_FRONTEND_IMAGE
           imagePullPolicy: Always
-          env:
-            - name: BACKEND_URL
-              value: '/api'
-          readinessProbe:
-            initialDelaySeconds: 10
-            periodSeconds: 5
+          livenessProbe:
             httpGet:
               path: /healthz
               port: 80
-          livenessProbe:
             initialDelaySeconds: 20
             periodSeconds: 5
+          name: todo-frontend
+          readinessProbe:
             httpGet:
               path: /healthz
               port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
           resources:
             limits:
-              cpu: '80m'
-              memory: '80Mi'
+              cpu: 80m
+              memory: 80Mi
