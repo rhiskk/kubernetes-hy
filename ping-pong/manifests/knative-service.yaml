@@ -1,0 +1,19 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  namespace: exercises
+  name: ping-pong-knative
+spec:
+  template:
+    metadata:
+      name: ping-pong-knative-dwk-v1
+    spec:
+      containers:
+        - name: ping-pong
+          image: ruuskhis/ping-pong:5.05
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-password
+                  key: POSTGRES_PASSWORD

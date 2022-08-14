@@ -63,6 +63,6 @@ app.get('/healthz', async (_req, res) => {
     }
 });
 
-server.listen(3000, () => {
-    console.log(`Server started in port 3000`);
+server.listen(8080, () => {
+    console.log(`Server started in port 8080`);
 });
